@@ -9,8 +9,9 @@ const askQuestion = {
 				description:
 				`The exact yes/no question to be asked of the contestant, absent of any  
 				exposition that might have been added by the panelist in their response`,
-			}
-		}
+			},
+		},
+		required: ['question'],
 	}
 };
 
@@ -29,14 +30,31 @@ const answerQuestion = {
 			correctGuess: {
 				type: 'boolean',
 				description: `This will be true if the question correctly guesses the contestant's job or profession and false otherwise`
-			}
+			},
 		},
 		required: ['answerIsYes', 'correctGuess'],
 	}
 };
 
+const characterName = {
+	name: 'character_name',
+	description: 
+		`Sets the name of the created character`,
+	parameters: {
+		type: 'object',
+		properties: {
+			name: {
+				type: 'string',
+				description: `The name of the character, extracted from the created character description`
+			}
+		},
+		required: ['name'],
+	}
+};
 
 export default {
 	panelist: [askQuestion],
 	contestant: [answerQuestion],
+	moderator: [],
+	generator: [characterName],
 };

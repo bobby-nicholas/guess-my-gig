@@ -4,6 +4,7 @@ const openai = new OpenAI({
   apiKey: process.env.API_KEY,
 });
 
-export const client = openai.beta.assistants;
+export const { files: filesClient } = openai;
+export const { assistants: assistantClient } = openai.beta;
 
 export const LATEST_MODEL = 'gpt-4-1106-preview';

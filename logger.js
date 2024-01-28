@@ -11,5 +11,7 @@ export default {
 	logAgentCreation(agent) {
 		info(`Agent '${agent.name}' created`);
 		obj(agent);
-	} 
+	},
+	info,
+	obj,
 }
