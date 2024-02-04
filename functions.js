@@ -36,6 +36,12 @@ const answerQuestion = {
 	}
 };
 
+const skip = {
+	name: 'skip',
+	description: 
+		`Invoked when a character doesn't want to add a response to the latest message in the group chat`,
+}
+
 const characterName = {
 	name: 'character_name',
 	description: 
@@ -53,8 +59,8 @@ const characterName = {
 };
 
 export default {
-	panelist: [askQuestion],
-	contestant: [answerQuestion],
-	moderator: [],
+	panelist: [askQuestion, skip],
+	guest: [answerQuestion, skip],
+	moderator: [skip],
 	generator: [characterName],
 };

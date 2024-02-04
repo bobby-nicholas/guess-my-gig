@@ -1,6 +1,6 @@
 import fs from "fs/promises"
-import Agent from "./agent";
-import functions from "./functions";
+import Agent from "./agent.js";
+import functions from "./functions.js";
 import { 
     GAME_PREMISE_FILENAME,
     MODERATOR_INSTRUCTIONS_PATH,

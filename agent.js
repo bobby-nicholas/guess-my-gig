@@ -1,5 +1,5 @@
-import logger from "./logger";
-import { assistantClient, LATEST_MODEL } from "./client";
+import logger from "./logger.js";
+import { assistantClient, LATEST_MODEL } from "./client.js";
 
 export default class Agent {
 	constructor(name, instructions, functions, files) {

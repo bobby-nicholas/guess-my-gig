@@ -1,15 +1,14 @@
-import 'dotenv/config';
 import fs from 'fs';
 
 import { filesClient } from "./client.js";
 import logger from './logger.js';
 
-const fileIdDictionary = {};
+const fileDictionary = {};
 
 export default async function getFileDictionary() {
-    if (Object.keys(fileIdDictionary).length) {
+    if (Object.keys(fileDictionary).length) {
         logger.info('Returning cached dictionary');
-        return fileIdDictionary;
+        return fileDictionary;
     }
 
     const localFiles = await fs.promises.readdir('knowledge');
@@ -27,10 +26,10 @@ export default async function getFileDictionary() {
                 file: fs.createReadStream(`knowledge/${filename}`, 'utf-8'),
                 purpose: 'assistants',
             });
-            fileIdDictionary[filename] = upload;
+            fileDictionary[filename] = upload;
         }
-        else fileIdDictionary[filename] = existingUpload;
+        else fileDictionary[filename] = existingUpload;
     }
 
-    return fileIdDictionary;
+    return fileDictionary;
 }

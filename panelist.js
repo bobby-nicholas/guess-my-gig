@@ -1,10 +1,10 @@
 import fs from "fs/promises"
 import kebabCase from "lodash.kebabcase";
-import Agent from "./agent";
-import functions from "./functions";
-import { GAME_PREMISE_FILENAME, PANELIST_INSTRUCTIONS_PATH } from "./prompts";
-import fileLoader from "./file-dictionary";
-import { filesClient } from "./client";
+import Agent from "./agent.js";
+import functions from "./functions.js";
+import { GAME_PREMISE_FILENAME, PANELIST_INSTRUCTIONS_PATH } from "./prompts.js";
+import fileLoader from "./file-dictionary.js";
+import { filesClient } from "./client.js";
 
 const instructions = await fs.readFile(PANELIST_INSTRUCTIONS_PATH, 'utf-8');
 
