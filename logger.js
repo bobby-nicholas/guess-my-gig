@@ -2,10 +2,11 @@ import chalk from "chalk";
 
 const log = console.log;
 
-const info = (...msg) => log(chalk.green(...msg));
-const obj = msg => log(chalk.blue(JSON.stringify(msg, null, 2)));
+const info = (...msg) => log(chalk.blue(...msg));
+const obj = msg => log(chalk.cyan(JSON.stringify(msg, null, 2)));
 const warning = (...msg) => log(chalk.yellow(...msg));
 const error = (...msg) => log(chalk.red(...msg));
+const success = (...msg) => log(chalk.green(...msg));
 
 export default {
 	logAgentCreation(agent) {
@@ -16,4 +17,5 @@ export default {
 	obj,
 	warning,
 	error,
+	success,
 }

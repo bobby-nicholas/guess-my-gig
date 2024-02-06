@@ -2,7 +2,9 @@ import 'dotenv/config';
 import { Argument, program } from 'commander';
 import logger from './logger.js';
 import CharacterGenerator from './generator.js';
-import { assistantClient } from './client.js';
+import { threadsClient } from './client.js';
+import Panelist from './panelist.js';
+import Moderator from './moderator.js';
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -19,31 +21,46 @@ program.command('generate')
 program.parse();
 
 
-const createMessage = type => ({ role: 'user', content: `Create a ${type}, as per your instructions` });
+const createMessage = type => ({ role: 'user', content: `Create a ${type}, as per your instructions.` });
 
 async function generate(type, quantity) {
     const generator = await CharacterGenerator.Create();
-    const thread = await assistantClient.threads.create();
-    switch (type) {
-        case 'panelist': 
-        case 'moderator':
-        case 'guest':
-        default:
-            break;
-    }
+    const thread = await threadsClient.create();
+    for (let i = 0; i < quantity; i++) await makeCharacter(generator, thread, type);
 }
 
-async function makePanelist(generator, thread) {
-    const message = await assistantClient.threads.messages.create(thread.id, createMessage('panelist'));
+async function makeCharacter(generator, thread, type) {
+    const message = await threadsClient.messages.create(thread.id, createMessage(type));
 
-    let run = await assistantClient.runs.create(thread.id, { assistant_id: generator.id });
-
-    while (run.status !== 'completed') {
-        if (run.status === 'requires_action' && run.required_action.type === 'submit_tool_outputs') {
+    const run = await threadsClient.runs.create(thread.id, { assistant_id: generator.agent.id });
+    let runStatus = await threadsClient.runs.retrieve(thread.id, run.id);
+    while (runStatus.status !== 'completed') {
+        if (runStatus.status === 'requires_action') {
             logger.warning('waiting for tool output');
-            logger.obj(run);
+            const { tool_calls } = runStatus.required_action?.submit_tool_outputs ?? [];
+
+            const tool = tool_calls.find(t => t.function.name === 'generate_character');
+
+            if (tool) {
+                logger.obj(tool);
+                const { name, full_description } = JSON.parse(tool.function.arguments);
+                switch (type) {
+                    case 'panelist': 
+                        await Panelist.Create(name, full_description);
+                        break;
+                    case 'moderator': 
+                        await Moderator.Create(name, full_description);
+                        break;
+                }
+                await threadsClient.runs.submitToolOutputs(thread.id, run.id, {
+                    tool_outputs: [{ tool_call_id: tool.id, output: JSON.stringify({ success: true }) }]
+                });
+            }
         }
-        logger.info('not yet complete. waiting 500 ms');
-        await sleep(500);
+
+        logger.info('Not yet complete. Waiting 1 second');
+        await sleep(1000);
+        runStatus = await threadsClient.runs.retrieve(thread.id, run.id);
     }
+    logger.success(`${type} created`);
 }

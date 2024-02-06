@@ -3,6 +3,7 @@ import { assistantClient, LATEST_MODEL } from "./client.js";
 
 export default class Agent {
 	constructor(name, instructions, functions, files) {
+		logger.obj(files);
 		this.name = name;
 		this.instructions = instructions;
 		this.tools = [

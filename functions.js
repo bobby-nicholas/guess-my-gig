@@ -42,19 +42,23 @@ const skip = {
 		`Invoked when a character doesn't want to add a response to the latest message in the group chat`,
 }
 
-const characterName = {
-	name: 'character_name',
+const generateCharacter = {
+	name: 'generate_character',
 	description: 
-		`Sets the name of the created character`,
+		`Sets the name and character description for the generated agent`,
 	parameters: {
 		type: 'object',
 		properties: {
 			name: {
 				type: 'string',
-				description: `The name of the character, extracted from the created character description`
-			}
+				description: `The name of the character`
+			},
+			full_description: {
+				type: 'string',
+				description: `The full character description`
+			},
 		},
-		required: ['name'],
+		required: ['name', 'full_description'],
 	}
 };
 
@@ -62,5 +66,5 @@ export default {
 	panelist: [askQuestion, skip],
 	guest: [answerQuestion, skip],
 	moderator: [skip],
-	generator: [characterName],
+	generator: [generateCharacter],
 };
