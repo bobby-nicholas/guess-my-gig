@@ -1,13 +1,12 @@
 import fs from 'fs';
-
-import { filesClient } from "./client.js";
+import { filesClient } from './client.js';
 import logger from './logger.js';
 
 const fileDictionary = {};
 
 export default async function getFileDictionary() {
     if (Object.keys(fileDictionary).length) {
-        logger.info('Returning cached dictionary');
+        logger.info('Returning cached file dictionary');
         return fileDictionary;
     }
 

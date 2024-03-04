@@ -36,6 +36,26 @@ const answerQuestion = {
 	}
 };
 
+const signIn = {
+	name: 'sign_in',
+	description: 
+		`Signs into the game. This provides the moderator and audience with your name and secret job or profession`,
+	parameters: {
+		type: 'object',
+		properties: {
+			name: {
+				type: 'string',
+				description: `Your name`
+			},
+			job: {
+				type: 'string',
+				description: `Your secret job or profession`
+			},
+		},
+		required: ['name', 'job'],
+	}
+};
+
 const skip = {
 	name: 'skip',
 	description: 
@@ -62,9 +82,27 @@ const generateCharacter = {
 	}
 };
 
+const dismissGuest = {
+	name: 'dismiss_guest',
+	description: 
+		`Invoked by the moderator at the end of a round to indicate to the producers that the guest has been excused from the stage`,
+};
+
+const nextGuest = {
+	name: 'next_guest',
+	description: 
+		`Invoked by the moderator to indicate to the producers to have the next guest available to sign in and begin the round`,
+};
+
+const endGame = {
+	name: 'end_game',
+	description: 
+		`Invoked by the moderator to indicate that the game is over and that the panelists and audience are dismissed`,
+};
+
 export default {
 	panelist: [askQuestion, skip],
-	guest: [answerQuestion, skip],
-	moderator: [skip],
+	guest: [signIn, answerQuestion, skip],
+	moderator: [dismissGuest, nextGuest, endGame, skip],
 	generator: [generateCharacter],
 };
